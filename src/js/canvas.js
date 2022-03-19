@@ -38,11 +38,9 @@ class Player {
     this.draw();
     if (this.position.y + this.height + this.velocity.y <= canvas.height)
       this.velocity.y += gravity;
-    else this.velocity.y = 0;
+    
   }
 }
-
-
 
 
 class Platform {
@@ -86,16 +84,14 @@ function createImage(imageSrc){
   image.src = imageSrc
   return image
 }
-
-
-const platformImage = createImage(platform)
-const player = new Player();
-const platforms = [
+let platformImage = createImage(platform)
+let player = new Player();
+let platforms = [
   new Platform({x:-1,y:624,image: platformImage}), 
-  new Platform({x:platformImage.width - 3,y:624,image: platformImage})
+  new Platform({x:platformImage.width * 1.3,y:624,image: platformImage})
 ];
 
-const genericObject = [
+let genericObject = [
   new GenericObject({
     x: -1,
     y: -1,
@@ -119,10 +115,36 @@ const keys = {
   },
 };
 
-player.update();
-
 let scrollOffset = 0
 
+function init(){
+
+
+ platformImage = createImage(platform)
+ player = new Player();
+ platforms = [
+  new Platform({x:-1,y:624,image: platformImage}), 
+  new Platform({x:platformImage.width * 1.3,y:624,image: platformImage})
+];
+
+ genericObject = [
+  new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(background)
+  }),
+  new GenericObject({
+    x: 150,
+    y: 50,
+    image: createImage(hills)
+  })
+
+]
+
+ scrollOffset = 0
+}
+
+player.update();
 function animate() {
   requestAnimationFrame(animate);
   c.fillStyle = 'gray'
@@ -176,9 +198,13 @@ function animate() {
     }
   });
 
+  //Win Condition
   if(scrollOffset > 3000){
-
+    console.log("você Ganhou!");
   }
+  //Lose Condition
+  if(player.position.y > canvas.height)
+   init()
 }
 
 animate()

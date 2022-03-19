@@ -182,7 +182,7 @@ var Player = /*#__PURE__*/function () {
       this.position.y += this.velocity.y;
       this.position.x += this.velocity.x;
       this.draw();
-      if (this.position.y + this.height + this.velocity.y <= canvas.height) this.velocity.y += gravity;else this.velocity.y = 0;
+      if (this.position.y + this.height + this.velocity.y <= canvas.height) this.velocity.y += gravity;
     }
   }]);
 
@@ -256,7 +256,7 @@ var platforms = [new Platform({
   y: 624,
   image: platformImage
 }), new Platform({
-  x: platformImage.width - 3,
+  x: platformImage.width * 1.3,
   y: 624,
   image: platformImage
 })];
@@ -277,8 +277,33 @@ var keys = {
     pressed: false
   }
 };
-player.update();
 var scrollOffset = 0;
+
+function init() {
+  platformImage = createImage(_img_platform2_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  player = new Player();
+  platforms = [new Platform({
+    x: -1,
+    y: 624,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 1.3,
+    y: 624,
+    image: platformImage
+  })];
+  genericObject = [new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_img_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  }), new GenericObject({
+    x: 150,
+    y: 50,
+    image: createImage(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  })];
+  scrollOffset = 0;
+}
+
+player.update();
 
 function animate() {
   requestAnimationFrame(animate);
@@ -323,9 +348,14 @@ function animate() {
     if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
       player.velocity.y = 0;
     }
-  });
+  }); //Win Condition
 
-  if (scrollOffset > 3000) {}
+  if (scrollOffset > 3000) {
+    console.log("você Ganhou!");
+  } //Lose Condition
+
+
+  if (player.position.y > canvas.height) init();
 }
 
 animate(); //movimentar o personagem para baixo
