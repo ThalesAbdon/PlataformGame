@@ -1,6 +1,7 @@
 import platform from '../img/platform2.png'
 import hills from '../img/hills.png'
 import background from '../img/background.png'
+import platformSmallTall from '../img/platformSmallTall2.png'
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -13,6 +14,8 @@ canvas.height = 720;
 //Personagem Principal
 class Player {
   constructor() {
+
+    this.speed = 10
     this.position = {
       x: 100,
       y: 100,
@@ -85,26 +88,10 @@ function createImage(imageSrc){
   return image
 }
 let platformImage = createImage(platform)
-let player = new Player();
-let platforms = [
-  new Platform({x:-1,y:624,image: platformImage}), 
-  new Platform({x:platformImage.width * 1.3,y:624,image: platformImage})
-];
-
-let genericObject = [
-  new GenericObject({
-    x: -1,
-    y: -1,
-    image: createImage(background)
-  }),
-  new GenericObject({
-    x: 150,
-    y: 50,
-    image: createImage(hills)
-  })
-
-]
-
+let platformSmallTallImage = createImage(platformSmallTall)
+let player = new Player()
+let platforms = []
+let genericObject = []
 
 const keys = {
   right: {
@@ -124,7 +111,10 @@ function init(){
  player = new Player();
  platforms = [
   new Platform({x:-1,y:624,image: platformImage}), 
-  new Platform({x:platformImage.width * 1.3,y:624,image: platformImage})
+  new Platform({x:platformImage.width * 1.3,y:624,image: platformImage}),
+  new Platform({x:platformImage.width * 2.9,y:624,image: platformImage}),
+  new Platform({x:platformImage.width * 4.2,y:504,image: platformSmallTallImage})
+
 ];
 
  genericObject = [
@@ -135,7 +125,7 @@ function init(){
   }),
   new GenericObject({
     x: 150,
-    y: 50,
+    y: 150,
     image: createImage(hills)
   })
 
@@ -159,28 +149,28 @@ function animate() {
   })
   player.update();
   if (keys.right.pressed && player.position.x < 400) {
-    player.velocity.x = 5;
-  } else if (keys.left.pressed && player.position.x > 100) {
-    player.velocity.x = -5;
+    player.velocity.x = player.speed
+  } else if ((keys.left.pressed && player.position.x > 100) || keys.left.pressed && scrollOffset === 0 && player.position.x > 0) {
+    player.velocity.x = -player.speed
   } else {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-        scrollOffset +=5
+        scrollOffset += player.speed
       platforms.forEach((platform) => {
-        platform.position.x -= 5;
+        platform.position.x -= player.speed;
       })
       genericObject.forEach(genericObject => {
-        genericObject.position.x -= 3
+        genericObject.position.x -= player.speed * 0.66
       })
 
-    } else if (keys.left.pressed) {
-        scrollOffset -=5
+    } else if (keys.left.pressed && scrollOffset > 0) {
+        scrollOffset -= player.speed
       platforms.forEach((platform) => {
-        platform.position.x += 5;
+        platform.position.x += player.speed;
       })
       genericObject.forEach(genericObject => {
-        genericObject.position.x += 3
+        genericObject.position.x += player.speed * 0.66
       })
     }
   }
@@ -207,6 +197,7 @@ function animate() {
    init()
 }
 
+init()
 animate()
 
 //movimentar o personagem para baixo
@@ -225,7 +216,7 @@ window.addEventListener("keydown", ({ keyCode }) => {
       break;
     case 87:
       console.log("up");
-      player.velocity.y -= 20;
+      player.velocity.y -= 22;
       break;
   }
 });
@@ -245,7 +236,6 @@ window.addEventListener("keyup", ({ keyCode }) => {
       break;
     case 87:
       console.log("up");
-      player.velocity.y -= 20;
       break;
   }
 });
