@@ -1,6 +1,6 @@
 Será necessário instalar as seguintes dependencias:
 
-## Getting Started
+## É MUITO SIMPLES
 
 1.  Instalar:
 
