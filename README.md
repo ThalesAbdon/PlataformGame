@@ -1,21 +1,17 @@
-Canvas Boilerplate is the go-to solution for quickly creating modern canvas pieces using ES6 and webpack.
+Será necessário instalar as seguintes dependencias:
 
-## Getting Started
+## É MUITO SIMPLES
 
-1.  Clone the repo:
+1.  Instalar:
 
-        git clone https://github.com/christopher4lis/canvas-boilerplate.git
-
-2.  Install dependencies:
-
-        yarn
+          yarn
 
     or
 
         npm install
 
-3.  Run webpack:
+2.  Para rodar o webpack:
 
         npm start
 
-Your canvas piece should open up automatically at http://localhost:3000 and you should see 'HTML CANVAS BOILERPLATE' on hover.
+O canvas irá abrir automaticamente em http://localhost:3000.
