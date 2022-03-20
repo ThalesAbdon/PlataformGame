@@ -3,6 +3,12 @@ import hills from '../img/hills.png'
 import background from '../img/background.png'
 import platformSmallTall from '../img/platformSmallTall2.png'
 
+import spriteIdleLeft from '../img/SpriteIdleLeft.png'
+import spriteIdleRight from '../img/SpriteIdleRight.png'
+import spriteRunLeft from '../img/SpriteRunLeft.png'
+import spriteRunRight from '../img/SpriteRunRight.png'
+
+
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const gravity = 1.2;
@@ -27,15 +33,52 @@ class Player {
       y: 1,
     };
 
-    this.width = 28;
-    this.height = 28;
+    this.width = 149;
+    this.height = 181;
+
+    this.image = createImage(spriteIdleRight)
+    this.frames = 0
+    this.sprites = {
+      idle: {
+        right: createImage(spriteIdleRight),
+        left: createImage(spriteIdleLeft),
+        cropWidth: 137.7
+      },
+      run: {
+          right: createImage(spriteRunRight),
+          left: createImage(spriteRunLeft),
+          cropWidth: 153.8
+      }
+    }
+    this.currentSprite = this.sprites.idle.right
+    this.currentCropWidth = 137.7
   }
   draw() {
-    c.fillStyle = "red";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.drawImage(
+      this.currentSprite,
+      this.currentCropWidth * this.frames,
+      0,
+      this.currentCropWidth,
+      181,
+
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+      )
   }
   //função que irá atualizar(em relação a movimento/posição/velocidade) o jogador
   update() {
+    this.frames++
+    
+    if( this.frames > 9 && (this.currentSprite === this.sprites.idle.left)) 
+       this.frames = 0
+    else if((this.frames > 8 && (this.currentSprite === this.sprites.idle.right)))
+       this.frames = 0
+    else if(this.frames > 7 && this.currentSprite === this.sprites.run.right)
+     this.frames = 0 
+    else if(this.frames > 7 && this.currentSprite === this.sprites.run.left)
+    this.frames = 0
     this.position.y += this.velocity.y;
     this.position.x += this.velocity.x;
     this.draw();
@@ -109,12 +152,15 @@ function init(){
 
  platformImage = createImage(platform)
  player = new Player();
+ player.position.x = 30
  platforms = [
   new Platform({x:-1,y:624,image: platformImage}), 
   new Platform({x:platformImage.width * 1.3,y:624,image: platformImage}),
   new Platform({x:platformImage.width * 2.9,y:624,image: platformImage}),
-  new Platform({x:platformImage.width * 4.2,y:504,image: platformSmallTallImage})
-
+  new Platform({x:platformImage.width * 4.2,y:504,image: platformSmallTallImage}),
+  new Platform({x:platformImage.width * 5.2,y:504,image: platformSmallTallImage}),
+  new Platform({x:platformImage.width * 6.2,y:424,image: platformSmallTallImage}),
+  new Platform({x:platformImage.width * 7.2,y:624,image: platformSmallTallImage})
 ];
 
  genericObject = [
@@ -148,7 +194,8 @@ function animate() {
     platform.draw();
   })
   player.update();
-  if (keys.right.pressed && player.position.x < 400) {
+  
+  if ((keys.right.pressed && player.position.x < 400)) {
     player.velocity.x = player.speed
   } else if ((keys.left.pressed && player.position.x > 100) || keys.left.pressed && scrollOffset === 0 && player.position.x > 0) {
     player.velocity.x = -player.speed
@@ -189,8 +236,10 @@ function animate() {
   });
 
   //Win Condition
-  if(scrollOffset > 3000){
+  if(scrollOffset === 3900){
     console.log("você Ganhou!");
+    alert('Parabéns, você terminou essa DEMO, o jogo irá reiniciar do 0');
+    location.reload()
   }
   //Lose Condition
   if(player.position.y > canvas.height)
@@ -206,6 +255,8 @@ window.addEventListener("keydown", ({ keyCode }) => {
     case 65:
       console.log("left");
       keys.left.pressed = true;
+      player.currentSprite = player.sprites.run.left
+      player.currentCropWidth = player.sprites.run.cropWidth
       break;
     case 83:
       console.log("down");
@@ -213,6 +264,8 @@ window.addEventListener("keydown", ({ keyCode }) => {
     case 68:
       console.log("right");
       keys.right.pressed = true;
+      player.currentSprite = player.sprites.run.right
+      player.currentCropWidth = player.sprites.run.cropWidth
       break;
     case 87:
       console.log("up");
@@ -226,6 +279,8 @@ window.addEventListener("keyup", ({ keyCode }) => {
     case 65:
       console.log("left");
       keys.left.pressed = false;
+      player.currentSprite = player.sprites.idle.left
+      player.currentCropWidth = player.sprites.idle.cropWidth
       break;
     case 83:
       console.log("down");
@@ -233,6 +288,8 @@ window.addEventListener("keyup", ({ keyCode }) => {
     case 68:
       console.log("right");
       keys.right.pressed = false;
+      player.currentSprite = player.sprites.idle.right
+      player.currentCropWidth = player.sprites.idle.cropWidth
       break;
     case 87:
       console.log("up");
