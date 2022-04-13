@@ -1,6 +1,6 @@
 Será necessário instalar as seguintes dependencias:
 
-## É MUITO SIMPLES
+## Baixe o NODE.JS e siga os seguintes passos:
 
 1.  Instalar:
 
